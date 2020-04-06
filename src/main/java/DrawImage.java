@@ -71,7 +71,8 @@ public class DrawImage {
     }
 
     public void drawCircles() {
-        if(!(drawOps.canDraw() || removeOps.canDraw())) return;
+        boolean remove = removeOps.canDraw();
+        if(!(drawOps.canDraw() || remove)) return;
 
         BufferedImage cut_copy = copyImage(img2.getSubimage(edges.getLeft(), edges.getTop(), edges.getCutWidth(), edges.getCutHeight()));
 
@@ -83,7 +84,7 @@ public class DrawImage {
         g.dispose();
 
         try { //draw cut_copy onto image:
-            if(removeOps.canDraw()) {
+            if(remove) {
                 int[] rgbArr = cut_copy.getRGB(0, 0, cut_copy.getWidth(), cut_copy.getHeight(), null, 0, cut_copy.getWidth());
                 img2.setRGB(edges.getLeft(), edges.getTop(), cut_copy.getWidth(), cut_copy.getHeight(), rgbArr, 0, cut_copy.getWidth());
             } else {

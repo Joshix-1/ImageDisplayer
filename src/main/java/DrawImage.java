@@ -21,6 +21,7 @@ public class DrawImage {
     private CuttingEdges edges;
     private DrawingOperations drawOps;
     private RemovingOperations removeOps;
+    private int edgeSize;
     boolean changed;
 
     public DrawImage(Image image, String name) {
@@ -39,7 +40,9 @@ public class DrawImage {
         removeOps = new RemovingOperations();
         changed = true;
 
-        edges = new CuttingEdges(getWidth(), getHeight());
+        int edgeSize = 10;
+
+        edges = new CuttingEdges(this);
     }
 
     public void draw(Point p) {
@@ -213,5 +216,13 @@ public class DrawImage {
 
     public void setChanged() {
         changed = true;
+    }
+
+    public int getEdgeSize() {
+        return edgeSize;
+    }
+
+    public void setEdgeSize(int edgeSize) {
+        this.edgeSize = edgeSize;
     }
 }

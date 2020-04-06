@@ -1,14 +1,15 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class CuttingEdges {
-    static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3;
-    private int imgWidth, imgHeight, selected;
-    private double[] edges;
+    private static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3;
+    private int selected;
+    private DrawImage image;
+    private int[] edges;
 
-    public CuttingEdges(int w, int h) {
-        imgWidth = w;
-        imgHeight = h;
-        edges = new double[]{0, 0, w, h};
+    public CuttingEdges(DrawImage img) {
+        image = img;
+        edges = new int[]{0, 0, img.getWidth(), img.getHeight()};
         selected = -1;
     }
 
@@ -19,10 +20,10 @@ public class CuttingEdges {
         edges[TOP] = pos >= getBottom() - 1 ? getBottom() - 1 : Math.max(pos, 0);
     }
     public void setRight(int pos) {
-        edges[RIGHT] = pos <= getLeft() + 1 ? getLeft() + 1 : Math.min(pos, imgWidth);
+        edges[RIGHT] = pos <= getLeft() + 1 ? getLeft() + 1 : Math.min(pos, image.getWidth());
     }
     public void setBottom(int pos) {
-        edges[BOTTOM] = pos <= getTop() + 1 ? getTop() + 1 : Math.min(pos, imgHeight);
+        edges[BOTTOM] = pos <= getTop() + 1 ? getTop() + 1 : Math.min(pos, image.getHeight());
     }
 
     private void setIndex(int index, Point p) {
@@ -47,31 +48,31 @@ public class CuttingEdges {
     }
 
     public int getLeft() {
-        return (int) edges[LEFT];
+        return edges[LEFT];
     }
     public int getTop() {
-        return (int) edges[TOP];
+        return edges[TOP];
     }
     public int getRight() {
-        return (int) edges[RIGHT];
+        return edges[RIGHT];
     }
     public int getBottom() {
-        return (int) edges[BOTTOM];
+        return edges[BOTTOM];
     }
 
     public int getCutWidth() {
-        return Math.max(0, (int) edges[RIGHT] - (int) edges[LEFT]);
+        return Math.max(0, edges[RIGHT] - edges[LEFT]);
     }
 
     public int getCutHeight() {
-        return Math.max(0, (int) edges[BOTTOM] - (int) edges[TOP]);
+        return Math.max(0, edges[BOTTOM] - edges[TOP]);
     }
 
     public int touchesPoint(Point p) {
-        if(p.x >= -Main.EDGE_SIZE && p.x <= getLeft() && p.y >= 0 && p.y < imgHeight) return LEFT;
-        if(p.y >= -Main.EDGE_SIZE && p.y <= getTop()  && p.x >= 0 && p.x < imgWidth) return TOP;
-        if(p.x <= imgWidth + Main.EDGE_SIZE && p.x >= getRight() && p.y >= 0 && p.y < imgHeight) return RIGHT;
-        if(p.y <= imgHeight + Main.EDGE_SIZE && p.y >= getBottom() && p.x >= 0 && p.x < imgWidth) return BOTTOM;
+        if(p.x >= -image.getEdgeSize() && p.x <= getLeft() && p.y >= 0 && p.y < image.getHeight()) return LEFT;
+        if(p.y >= -image.getEdgeSize() && p.y <= getTop()  && p.x >= 0 && p.x < image.getWidth()) return TOP;
+        if(p.x <= image.getWidth() + image.getEdgeSize() && p.x >= getRight() && p.y >= 0 && p.y < image.getHeight()) return RIGHT;
+        if(p.y <= image.getHeight() + image.getEdgeSize() && p.y >= getBottom() && p.x >= 0 && p.x < image.getWidth()) return BOTTOM;
         //here check if on corner:
         return -1;
     }
@@ -91,7 +92,7 @@ public class CuttingEdges {
     }
 
     public CuttingEdges scaledCopy(double scaleW, double scaleH) {
-        CuttingEdges copy = new CuttingEdges((int) (imgWidth * scaleW), (int) (imgHeight * scaleH));
+        CuttingEdges copy = new CuttingEdges(new DrawImage(new BufferedImage((int) (image.getWidth() * scaleW), (int)(image.getHeight() * scaleH), BufferedImage.TYPE_INT_ARGB), ""));
 
         copy.setLeft((int) (getLeft() * scaleW));
         copy.setTop((int) (getTop() * scaleH));

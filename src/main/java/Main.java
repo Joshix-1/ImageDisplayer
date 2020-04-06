@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class Main extends JFrame implements MouseListener {
     static final private int APS = 500; //how often the Drawing checks for updates
     static final private int FPS = 30; //how often everything gets displayed
-    static final public int EDGE_SIZE = 20;
+    static final private int EDGE_SIZE = 20;
     static final public Color BG = Color.WHITE;
     private DrawImage image;
     private int imgOffsetX, imgOffsetY;
@@ -35,7 +35,7 @@ public class Main extends JFrame implements MouseListener {
     }
 
     private Main(Image image) {
-        this("New Image", 1);//"Image from Clipboard");
+        this("New Image", 1);
         setImage(image, "new Image");
     }
 
@@ -85,6 +85,9 @@ public class Main extends JFrame implements MouseListener {
             imgDisplayW = Math.min(imgDisplayW, (int) (ratio * ((double) (getHeight() - (2 * EDGE_SIZE)) * 0.88)));
 
             imgDisplayH = (int) (imgDisplayW/ratio);
+
+            image.setEdgeSize(EDGE_SIZE * image.getWidth()/imgDisplayW);
+
 
             BufferedImage copy = image.getDisplayImage(imgDisplayW, imgDisplayH);
 
@@ -171,7 +174,6 @@ public class Main extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getButton() == MouseEvent.BUTTON1 && mouseIsOnSides()) {
-            System.out.println("Color changed");
             image.changeDrawingColor();
         } else if(e.getButton() == MouseEvent.BUTTON2) {
             BufferedImage bi = image.getCopyImage();

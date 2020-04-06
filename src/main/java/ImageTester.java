@@ -64,11 +64,6 @@ public class ImageTester {
     }
 
     private static boolean areSimilar(Color c1, Color c2) {
-
-        //System.out.println("1:" + c1);
-        //System.out.println("2:" + c2);
-
-
         int rDiff = Math.abs(c1.getRed() - c2.getRed());
         int gDiff = Math.abs(c1.getGreen() - c2.getGreen());
         int bDiff = Math.abs(c1.getBlue() - c2.getBlue());

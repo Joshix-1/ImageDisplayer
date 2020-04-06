@@ -83,9 +83,16 @@ public class DrawImage {
         g.dispose();
 
         try { //draw cut_copy onto image:
-            int[] rgbArr = cut_copy.getRGB(0, 0, cut_copy.getWidth(), cut_copy.getHeight(), null, 0, cut_copy.getWidth());
+            if(removeOps.canDraw()) {
+                int[] rgbArr = cut_copy.getRGB(0, 0, cut_copy.getWidth(), cut_copy.getHeight(), null, 0, cut_copy.getWidth());
+                img2.setRGB(edges.getLeft(), edges.getTop(), cut_copy.getWidth(), cut_copy.getHeight(), rgbArr, 0, cut_copy.getWidth());
+            } else {
+                Graphics g2 = img2.getGraphics();
+                g2.drawImage(cut_copy, edges.getLeft(), edges.getTop(), null);
+                g2.dispose();
+            }
 
-            img2.setRGB(edges.getLeft(), edges.getTop(), cut_copy.getWidth(), cut_copy.getHeight(), rgbArr, 0, cut_copy.getWidth());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

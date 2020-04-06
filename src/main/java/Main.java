@@ -14,8 +14,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends JFrame implements MouseListener {
-    static final private int APS = 500; //how often the Drawing checks for updates
-    static final private int FPS = 30; //how often everything gets displayed
+    static final private int APS = 400; //how often the Drawing checks for updates
+    static final private int FPS = 25; //how often everything gets displayed
     static final private int EDGE_SIZE = 20;
     static final public Color BG = Color.WHITE;
     private DrawImage image;
@@ -71,7 +71,7 @@ public class Main extends JFrame implements MouseListener {
                 setIconImage(image.getCopyImage());
                 counter = 0;
             }
-            if(draw_counter > 1) {
+            if(draw_counter > 3) {
                 draw_counter = 0;
                 image.drawCircles();
             } else draw_counter++;

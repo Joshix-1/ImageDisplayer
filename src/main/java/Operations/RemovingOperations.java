@@ -6,7 +6,7 @@ import java.util.List;
 
 public class RemovingOperations extends Operations {
     static private Color TRANSPARENT = new Color(255, 255, 255, 0);
-    private List<RemoveOperation> operationList;
+    private List<Operation> operationList;
 
     public RemovingOperations() {
         super();
@@ -14,7 +14,7 @@ public class RemovingOperations extends Operations {
     }
 
     public void run(Graphics2D g) {
-        if(!canDraw()) return;
+        if (!canDraw()) return;
 
         List<Operation> copy = new ArrayList<>(operationList);
         operationList = new ArrayList<>();
@@ -24,13 +24,14 @@ public class RemovingOperations extends Operations {
     }
 
     public void add(Point p, int r) {
-        operationList.add(new RemoveOperation(p, r));
+        operationList.add(new Operation(p, r));
     }
 
     public boolean canDraw() {
         return operationList.size() > 0;
     }
 
+    /*
     private class RemoveOperation extends Operation {
 
         private RemoveOperation(Point p, int radius) {
@@ -42,4 +43,5 @@ public class RemovingOperations extends Operations {
             return new RemoveOperation(p, radius);
         }
     }
+    */
 }

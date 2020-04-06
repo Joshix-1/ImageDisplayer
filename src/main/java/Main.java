@@ -40,13 +40,6 @@ public class Main extends JFrame implements MouseListener {
     }
 
     private Main(String imageName, int window_count) {
-        try {
-            URL path = Main.class.getResource("image.png");
-            setIconImage(ImageIO.read(path));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         repaint();
         setSize(666, 420);
         setVisible(true);

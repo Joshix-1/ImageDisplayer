@@ -71,7 +71,7 @@ public class Main extends JFrame implements MouseListener {
                 setIconImage(image.getCopyImage());
                 counter = 0;
             }
-            if(draw_counter > 3) {
+            if(draw_counter > (image.getHeight() + image.getWidth())/1000) {
                 draw_counter = 0;
                 image.drawCircles();
             } else draw_counter++;

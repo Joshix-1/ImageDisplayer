@@ -15,14 +15,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Main extends JFrame implements MouseListener {
     static final private int APS = 400; //how often the Drawing checks for updates
-    static final private int FPS = 25; //how often everything gets displayed
+    static final private int FPS = 30; //how often everything gets displayed
     static final private int EDGE_SIZE = 20;
     static final public Color BG = Color.WHITE;
     private DrawImage image;
     private int imgOffsetX, imgOffsetY;
     private int imgDisplayW,imgDisplayH;
     private int counter = 0;
-    private int draw_counter = 0;
     private File imgFile;
     private ScheduledExecutorService draw_schedule = Executors.newScheduledThreadPool(1);
     private ScheduledExecutorService remove_schedule = Executors.newScheduledThreadPool(1);
@@ -71,10 +70,10 @@ public class Main extends JFrame implements MouseListener {
                 setIconImage(image.getCopyImage());
                 counter = 0;
             }
-            if(draw_counter > (image.getHeight() + image.getWidth())/1000) {
-                draw_counter = 0;
+
+            if(image.hasDrawn()) {
                 image.drawCircles();
-            } else draw_counter++;
+            }
 
             Graphics g = getGraphics();
             g.setPaintMode();
@@ -113,10 +112,12 @@ public class Main extends JFrame implements MouseListener {
             g.drawImage(copy, imgOffsetX - 1, imgOffsetY - 1, null);
 
             g.dispose();
-        } else if(counter != -1) {
-            counter = -1;
-            setIconImage(image.getCopyImage());
-            image.drawCircles();
+        } else {
+            if(counter != -1) {
+                counter = -1;
+                setIconImage(image.getCopyImage());
+                image.drawCircles();
+            }
         }
     }
 

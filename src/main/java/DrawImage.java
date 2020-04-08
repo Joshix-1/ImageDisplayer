@@ -22,7 +22,7 @@ public class DrawImage {
     private DrawingOperations drawOps;
     private RemovingOperations removeOps;
     private int edgeSize;
-    boolean changed;
+    private boolean changed, drawn;
 
     public DrawImage(Image image, String name) {
         img = new ImageIcon(image).getImage();
@@ -39,8 +39,8 @@ public class DrawImage {
         drawOps = new DrawingOperations();
         removeOps = new RemovingOperations();
         changed = true;
+        drawn = true;
 
-        int edgeSize = 10;
 
         edges = new CuttingEdges(this);
     }
@@ -72,32 +72,39 @@ public class DrawImage {
 
     public void drawCircles() {
         boolean remove = removeOps.canDraw();
-        if(!(drawOps.canDraw() || remove)) return;
+        if(!(drawOps.canDraw() || remove || drawn)) return;
+        try {
+            drawn = false;
 
-        BufferedImage cut_copy = copyImage(img2.getSubimage(edges.getLeft(), edges.getTop(), edges.getCutWidth(), edges.getCutHeight()));
-
-        Graphics2D g = cut_copy.createGraphics();
-
-        drawOps.run(g);
-        removeOps.run(g);
-
-        g.dispose();
-
-        try { //draw cut_copy onto image:
-            if(remove) {
-                int[] rgbArr = cut_copy.getRGB(0, 0, cut_copy.getWidth(), cut_copy.getHeight(), null, 0, cut_copy.getWidth());
-                img2.setRGB(edges.getLeft(), edges.getTop(), cut_copy.getWidth(), cut_copy.getHeight(), rgbArr, 0, cut_copy.getWidth());
+            boolean cut = edges.getCutWidth() == getWidth() && edges.getCutHeight() == getHeight();
+            Graphics2D g;
+            BufferedImage cut_copy = null;
+            if (cut) {
+                cut_copy = copyImage(img2.getSubimage(edges.getLeft(), edges.getTop(), edges.getCutWidth(), edges.getCutHeight()));
+                g = cut_copy.createGraphics();
             } else {
-                Graphics g2 = img2.getGraphics();
-                g2.drawImage(cut_copy, edges.getLeft(), edges.getTop(), null);
-                g2.dispose();
+                g = img2.createGraphics();
             }
 
+            drawOps.run(g);
+            removeOps.run(g);
 
-        } catch (Exception e) {
+            g.dispose();
+
+            if (cut) { //draw cut_copy onto image:
+                if (remove) {
+                    int[] rgbArr = cut_copy.getRGB(0, 0, cut_copy.getWidth(), cut_copy.getHeight(), null, 0, cut_copy.getWidth());
+                    img2.setRGB(edges.getLeft(), edges.getTop(), cut_copy.getWidth(), cut_copy.getHeight(), rgbArr, 0, cut_copy.getWidth());
+                } else {
+                    Graphics g2 = img2.getGraphics();
+                    g2.drawImage(cut_copy, edges.getLeft(), edges.getTop(), null);
+                    g2.dispose();
+                }
+            }
+        } catch(Exception e) {
             e.printStackTrace();
         }
-
+        drawn = true;
         changed = true;
     }
 
@@ -232,5 +239,9 @@ public class DrawImage {
 
     public void setEdgeSize(int edgeSize) {
         this.edgeSize = edgeSize;
+    }
+
+    public boolean hasDrawn() {
+        return drawn;
     }
 }
